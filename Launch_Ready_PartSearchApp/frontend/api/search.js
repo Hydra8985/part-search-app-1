@@ -1,33 +1,36 @@
-import { readFile, utils } from 'xlsx';
-import path from 'path';
-import { promises as fs } from 'fs';
+
+import xlsx from "xlsx";
+import path from "path";
+import { promises as fs } from "fs";
 
 export default async function handler(req, res) {
   const { q } = req.query;
-
   if (!q || q.length < 2) {
-    return res.status(200).json([]);
+    return res.status(400).json([]);
   }
 
+  const filePath = path.join(process.cwd(), "Launch_Ready_PartSearchApp", "Finalfixeddracsheet.xlsx");
   try {
-    const filePath = path.join(process.cwd(), 'Launch_Ready_PartSearchApp', 'Finalfixeddracsheet.xlsx');
     const fileBuffer = await fs.readFile(filePath);
-    const workbook = readFile(fileBuffer, { type: 'buffer' });
-    const sheet = workbook.Sheets[workbook.SheetNames[0]];
-    const data = utils.sheet_to_json(sheet);
+    const workbook = xlsx.read(fileBuffer, { type: "buffer" });
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const data = xlsx.utils.sheet_to_json(worksheet);
 
-    const query = q.toLowerCase();
-    const filtered = data.filter(item =>
-      item['Part Number']?.toString().toLowerCase().includes(query)
-    ).map(item => ({
-      part: item['Part Number'],
-      category: item['Category'],
-      price: item['Price']
-    }));
+    const filtered = data
+      .filter((row) =>
+        row["Part Number"] &&
+        row["Part Number"].toString().toLowerCase().includes(q.toLowerCase())
+      )
+      .map((row) => ({
+        part: row["Part Number"],
+        category: row["Category"] || "N/A",
+        price: row["Price"] || 0
+      }));
 
-    res.status(200).json(filtered);
+    return res.status(200).json(filtered);
   } catch (err) {
-    console.error('Error reading file:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("API Error:", err);
+    return res.status(500).json({ error: "Failed to process Excel data" });
   }
 }
