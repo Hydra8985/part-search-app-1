@@ -1,7 +1,20 @@
 {
+  "name": "frontend",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "vite": "^4.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
   }
 }
+Add build script for Vercel deployment
