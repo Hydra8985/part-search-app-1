@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 
 const allowedUsers = [
@@ -59,7 +58,7 @@ const PartSearch = () => {
       if (query.length < 2) return setResults([]);
       setLoading(true);
       try {
-        const res = await fetch(`http://localhost:3001/api/search?q=${encodeURIComponent(query)}`);
+        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
         const data = await res.json();
         setResults(data);
       } catch (err) {
