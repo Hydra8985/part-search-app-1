@@ -1,20 +1,16 @@
 {
-  "name": "frontend",
+  "name": "part-search-app",
   "version": "1.0.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "start": "vite preview"
   },
   "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^5.1.0",
-    "xlsx": "^0.18.5"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "vite": "^4.0.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "vite": "^5.2.0"
   }
 }
-Add build script for Vercel deployment
