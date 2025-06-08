@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 const allowedUsers = [
   { username: "admin", password: "admin123" },
+  { username: "imabitch", password: "iloveyou" },
   { username: "user1", password: "password1" }
 ];
 
