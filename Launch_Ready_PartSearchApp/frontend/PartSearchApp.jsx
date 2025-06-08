@@ -55,7 +55,11 @@ const PartSearch = () => {
 
   useEffect(() => {
     const fetchResults = async () => {
-      if (query.length < 2) return setResults([]);
+      if (query.length < 2) {
+        setResults([]);
+        return;
+      }
+
       setLoading(true);
       try {
         const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
@@ -67,6 +71,7 @@ const PartSearch = () => {
       }
       setLoading(false);
     };
+
     fetchResults();
   }, [query]);
 
@@ -85,9 +90,9 @@ const PartSearch = () => {
         <div>
           {results.map((item, i) => (
             <div key={i} style={{ border: "1px solid #666", borderRadius: "0.5rem", padding: "1rem", marginBottom: "1rem" }}>
-              <p><strong>Part Number:</strong> {item.part}</p>
-              <p><strong>Category:</strong> {item.category}</p>
-              <p><strong>Price:</strong> ${item.price}</p>
+              <p><strong>Part Number:</strong> {item["Part Number"]}</p>
+              <p><strong>Category:</strong> {item["Category"]}</p>
+              <p><strong>Price:</strong> ${item["Price"]}</p>
             </div>
           ))}
         </div>
