@@ -1,21 +1,18 @@
-import { NextResponse } from "next/server";
-import partData from "./part_data.json";
+import partData from './part_data.json';
 
-export async function GET(req) {
-  const { searchParams } = new URL(req.url);
-  const query = searchParams.get("q");
+export default function handler(req, res) {
+  const { q } = req.query;
 
-  if (!query || query.length < 2) {
-    return NextResponse.json([]);
+  if (!q || q.length < 2) {
+    return res.status(200).json([]);
   }
 
-  const lowerQuery = query.toLowerCase();
-  const results = partData.filter((item) => {
-    return (
-      item["Part Number"]?.toString().toLowerCase().includes(lowerQuery) ||
-      item["Category"]?.toString().toLowerCase().includes(lowerQuery)
-    );
-  });
+  const lowerQuery = q.toLowerCase();
 
-  return NextResponse.json(results);
+  const results = partData.filter(item =>
+    item["Part Number"]?.toString().toLowerCase().includes(lowerQuery) ||
+    item["Category"]?.toString().toLowerCase().includes(lowerQuery)
+  );
+
+  res.status(200).json(results);
 }
