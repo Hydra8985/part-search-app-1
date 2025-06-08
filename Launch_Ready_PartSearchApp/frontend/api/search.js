@@ -1,28 +1,21 @@
-import { readFile, utils } from "xlsx";
-import fs from "fs";
-import path from "path";
+import { NextResponse } from "next/server";
+import partData from "./part_data.json";
 
-export default function handler(req, res) {
-  const filePath = path.join(process.cwd(), "Launch_Ready_PartSearchApp", "Finalfixeddracsheet.xlsx");
+export async function GET(req) {
+  const { searchParams } = new URL(req.url);
+  const query = searchParams.get("q");
 
-  try {
-    const fileBuffer = fs.readFileSync(filePath);
-    const workbook = readFile(fileBuffer, { type: "buffer" });
-
-    const sheetName = workbook.SheetNames[0]; // Get the first sheet
-    const worksheet = workbook.Sheets[sheetName];
-    const jsonData = utils.sheet_to_json(worksheet);
-
-    console.log(jsonData.slice(0, 5)); // 👈 This will show a preview in Vercel logs
-
-    const { q } = req.query;
-    const filtered = jsonData.filter((item) =>
-      String(item["Part Number"]).toLowerCase().includes(String(q || "").toLowerCase())
-    );
-
-    res.status(200).json(filtered);
-  } catch (error) {
-    console.error("Error reading Excel file:", error);
-    res.status(500).json({ error: "Failed to load data" });
+  if (!query || query.length < 2) {
+    return NextResponse.json([]);
   }
+
+  const lowerQuery = query.toLowerCase();
+  const results = partData.filter((item) => {
+    return (
+      item["Part Number"]?.toString().toLowerCase().includes(lowerQuery) ||
+      item["Category"]?.toString().toLowerCase().includes(lowerQuery)
+    );
+  });
+
+  return NextResponse.json(results);
 }
